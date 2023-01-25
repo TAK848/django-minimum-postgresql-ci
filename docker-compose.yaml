@@ -1,34 +1,33 @@
 version: '3.8'
 
 volumes:
-  mysql-ci-db-data:
+  postgresql-ci-db-data:
 
 
 services:
   db:
-    container_name: mysql-ci-db
-    image: mysql:8.0
+    container_name: postgresql-ci-db
+    image: postgres:15
     volumes:
-      - mysql-ci-db-data:/var/lib/mysql
-      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
+      - postgresql-ci-db-data:/var/lib/postgresql/data
     env_file:
       - .env
     ports:
-      - 3306:3306
+      - 5432:5432
     healthcheck:
-      test: mysqladmin ping -u${MYSQL_USER} -p${MYSQL_PASSWORD}
+      test: pg_isready -U ${POSTGRES_USER}
       interval: 1s
       timeout: 1s
       retries: 100
       start_period: 1s
 
   api:
-    container_name: mysql-ci-api
+    container_name: postgresql-ci-api
     build: .
     volumes:
       - .:/code # for auto reload
     ports:
-      - ${DJANGO_CLIENT_HTTP_PORT:-8000}:8000
+      - 8000:8000
     env_file:
       - .env
     depends_on:
