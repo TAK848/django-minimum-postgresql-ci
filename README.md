@@ -1,3 +1,9 @@
-# django-minimum-mysql-ci
+# django-minimum-postgresql-ci
 
-コミュニティで使えるように，日本語echoするなどゆるふわ仕様
+https://github.com/TAK848/django-minimum-ci (sqlite version)のPostgreSQL版
+
+Docker使いつつ，最小限構成に抑えたDjangoのCI環境
+
+linter: flake8
+
+formatter: black, isort

@@ -1,0 +1,67 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lint-and-format:
+    name: Check Python lint and format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          pip install -U pip setuptools wheel
+          pip install -r requirements.txt
+      - name: Lint with flake8
+        run: flake8
+      - name: Check format
+        run: |
+          isort --check-only --diff --color .
+          black --check --diff --color .
+
+  django-test:
+    name: Django Test
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U $POSTGRES_USER"
+          --health-interval=1s
+          --health-timeout=1s
+          --health-retries=30
+          --health-start-period=3s
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          pip install -U pip setuptools wheel
+          pip install -r requirements.txt
+      - name: Check Migration
+        run: python manage.py makemigrations --check
+      - name: Django check
+        run: python manage.py check
+      - name: Run Django Unit Test
+        run: python manage.py test

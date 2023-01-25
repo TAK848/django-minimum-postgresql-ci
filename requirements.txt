@@ -3,7 +3,7 @@ django-environ
 uwsgi
 
 # DB
-mysqlclient~=2.1
+psycopg2
 
 # linting and formatting
 black

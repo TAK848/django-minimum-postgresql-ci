@@ -81,14 +81,14 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "HOST": env("MYSQL_HOST"),
-        "NAME": env("MYSQL_DATABASE"),
-        "USER": env("MYSQL_USER"),
-        "PASSWORD": env("MYSQL_PASSWORD"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("POSTGRES_DB"),
+        "HOST": env("POSTGRES_HOST"),
+        "PORT": env("POSTGRES_PORT", default=5432),
+        "USER": env("POSTGRES_USER"),
+        "PASSWORD": env("POSTGRES_PASSWORD"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

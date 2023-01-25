@@ -14,14 +14,14 @@ class TestSignUpView(TestCase):
         self.assertTemplateUsed(response, "accounts/signup.html")
 
     def test_success_post(self):
-        user_data = {
+        data = {
             "username": "test",
             "email": "abcde@example.com",
             "password1": "i*9U92aasIhm",
             "password2": "i*9U92aasIhm",
         }
 
-        response = self.client.post(self.url, user_data)
+        response = self.client.post(self.url, data)
 
         self.assertRedirects(
             response,
@@ -33,20 +33,20 @@ class TestSignUpView(TestCase):
 
         self.assertTrue(
             User.objects.filter(
-                username=user_data["username"],
-                email=user_data["email"],
+                username=data["username"],
+                email=data["email"],
             ).exists(),
         )
 
     def test_failure_post_with_empty_password(self):
-        username_empty_data = {
+        data = {
             "username": "test",
             "email": "testmail@example.com",
             "password1": "",
             "password2": "",
         }
 
-        response = self.client.post(self.url, data=username_empty_data)
+        response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.all().count(), 0)
 
@@ -60,7 +60,7 @@ class TestSignUpView(TestCase):
         data = {
             "username": "test",
             "email": "test@example.com",
-            'password1': 'u8@j(x',
+            "password1": "u8@j(x",
             "password2": "u8@j(x",
         }
         response = self.client.post(self.url, data)
