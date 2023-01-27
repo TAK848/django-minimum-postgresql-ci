@@ -17,8 +17,8 @@ class TestSignUpView(TestCase):
         data = {
             "username": "test",
             "email": "abcde@example.com",
-            "password1": "i*9U92aasIhm",
-            "password2": "i*9U92aasIhm",
+            "password1": "testtest",
+            "password2": "testtest",
         }
 
         response = self.client.post(self.url, data)
